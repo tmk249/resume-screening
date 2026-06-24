@@ -35,21 +35,67 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        
-        @keyframes pulse-slow {
-            0%, 100% { opacity: 0.15; transform: scale(1); }
-            50% { opacity: 0.25; transform: scale(1.1); }
+        @keyframes float-blob-1 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(40px, -60px) scale(1.08); }
+            66% { transform: translate(-20px, 30px) scale(0.95); }
         }
-        .animate-pulse-slow {
-            animation: pulse-slow 10s ease-in-out infinite;
+        @keyframes float-blob-2 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(-50px, 50px) scale(1.12); }
+        }
+        .animate-blob-1 {
+            animation: float-blob-1 25s infinite ease-in-out;
+        }
+        .animate-blob-2 {
+            animation: float-blob-2 20s infinite ease-in-out;
+        }
+
+        .gradient-border-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dark .gradient-border-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gradient-border-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .dark .gradient-border-card::before {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(99, 102, 241, 0.22));
+        }
+        .gradient-border-card:hover {
+            transform: translateY(-2.5px);
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.05);
+        }
+        .dark .gradient-border-card:hover {
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.35);
+        }
+        .gradient-border-card:hover::before {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.65), rgba(99, 102, 241, 0.65));
         }
     </style>
 </head>
 <body class="bg-slate-50/50 dark:bg-slate-950 min-h-screen text-slate-800 dark:text-slate-100 relative overflow-x-hidden transition-colors duration-300">
     
     <!-- Premium background blobs -->
-    <div class="absolute w-[600px] h-[600px] rounded-full bg-blue-400/5 blur-[120px] -top-80 -left-60 pointer-events-none animate-pulse-slow"></div>
-    <div class="absolute w-[500px] h-[500px] rounded-full bg-indigo-400/5 blur-[120px] top-[40vh] -right-40 pointer-events-none animate-pulse-slow" style="animation-delay: -5s;"></div>
+    <div class="absolute w-[600px] h-[600px] rounded-full bg-blue-400/5 dark:bg-blue-550/5 blur-[120px] -top-80 -left-60 pointer-events-none animate-blob-1"></div>
+    <div class="absolute w-[500px] h-[500px] rounded-full bg-indigo-400/5 dark:bg-indigo-550/5 blur-[120px] top-[40vh] -right-40 pointer-events-none animate-blob-2"></div>
 
     <!-- Floating Glass Header -->
     <header class="mx-auto my-4 max-w-7xl px-6 py-4 bg-white/80 dark:bg-slate-900/85 backdrop-blur-lg border border-slate-200/50 dark:border-slate-800/50 shadow-sm rounded-2xl sticky top-4 z-50 flex justify-between items-center transition-all duration-300 hover:shadow-md">

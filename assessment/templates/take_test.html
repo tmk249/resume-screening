@@ -16,13 +16,59 @@
         body {
             font-family: 'Outfit', sans-serif;
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        @keyframes float-blob-1 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -45px) scale(1.05); }
+            66% { transform: translate(-25px, 25px) scale(0.95); }
         }
-        .float-animation {
-            animation: float 6s ease-in-out infinite;
+        @keyframes float-blob-2 {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(-40px, 40px) scale(1.1); }
+        }
+        .animate-blob-1 {
+            animation: float-blob-1 25s infinite ease-in-out;
+        }
+        .animate-blob-2 {
+            animation: float-blob-2 20s infinite ease-in-out;
+        }
+        
+        .gradient-border-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dark .gradient-border-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gradient-border-card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(99, 102, 241, 0.15));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .dark .gradient-border-card::before {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(99, 102, 241, 0.22));
+        }
+        .gradient-border-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.05);
+        }
+        .dark .gradient-border-card:hover {
+            box-shadow: 0 16px 30px -10px rgba(0, 0, 0, 0.35);
+        }
+        .gradient-border-card:hover::before {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.65), rgba(99, 102, 241, 0.65));
         }
     </style>
 </head>
@@ -31,7 +77,7 @@
     
     <!-- Theme Toggle floating button -->
     <div class="absolute top-6 right-6 z-20">
-        <button id="themeToggle" class="p-3 bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/80 backdrop-blur-md rounded-2xl text-slate-650 dark:text-slate-350 hover:text-slate-950 dark:hover:text-slate-100 hover:shadow-md transition-all duration-200 cursor-pointer">
+        <button id="themeToggle" class="p-3 bg-white/70 dark:bg-slate-900/70 border border-slate-200/50 dark:border-slate-800/80 backdrop-blur-md rounded-2xl text-slate-655 dark:text-slate-350 hover:text-slate-955 dark:hover:text-slate-100 hover:shadow-md transition-all duration-200 cursor-pointer">
             <!-- Sun Icon (visible in dark mode) -->
             <svg id="themeSun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             <!-- Moon Icon (visible in light mode) -->
@@ -40,12 +86,12 @@
     </div>
 
     <!-- Decorative background elements -->
-    <div class="absolute w-[500px] h-[500px] rounded-full bg-blue-400/10 dark:bg-blue-500/5 blur-[90px] -top-40 -left-40 pointer-events-none float-animation"></div>
-    <div class="absolute w-[400px] h-[400px] rounded-full bg-indigo-400/10 dark:bg-indigo-500/5 blur-[90px] -bottom-20 -right-20 pointer-events-none float-animation" style="animation-delay: -3s;"></div>
+    <div class="absolute w-[500px] h-[500px] rounded-full bg-blue-400/10 dark:bg-blue-500/5 blur-[90px] -top-40 -left-40 pointer-events-none animate-blob-1"></div>
+    <div class="absolute w-[400px] h-[400px] rounded-full bg-indigo-400/10 dark:bg-indigo-500/5 blur-[90px] -bottom-20 -right-20 pointer-events-none animate-blob-2"></div>
 
-<div class="max-w-4xl mx-auto my-10 bg-white/75 dark:bg-slate-900/75 backdrop-blur-lg border border-slate-200/50 dark:border-slate-800/80 p-8 rounded-3xl shadow-xl z-10 transition-all duration-300 relative">
+<div class="max-w-4xl mx-auto my-10 gradient-border-card p-8 rounded-3xl z-10 shadow-xl relative">
     
-    <div class="mb-6 p-5 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl bg-white dark:bg-slate-900/60 backdrop-blur-md shadow-sm transition-all duration-300">
+    <div class="gradient-border-card mb-6 p-5 rounded-2xl shadow-sm">
         <div class="flex justify-between items-center mb-3">
             <h3 class="font-bold text-slate-850 dark:text-slate-200 text-sm flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
