@@ -3,10 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 import pdfplumber
 import docx
-import spacy
 import re
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
 from .models import UserInfo
 from resume_parser.models import JobRole
 from django.core.mail import send_mail, send_mass_mail
@@ -18,15 +15,12 @@ from datetime import datetime
 from django.db.models import Avg
 
 
-nlp = None
 model = None
 
 def load_models():
-    global nlp, model
-    if nlp is None:
-        nlp = spacy.load("en_core_web_sm")
-    
+    global model
     if model is None:
+        from sentence_transformers import SentenceTransformer
         model = SentenceTransformer('all-MiniLM-L6-v2')
 
 def extract_text_from_pdf(file):
@@ -233,13 +227,12 @@ def extract_text(file):
 
 def match_score(jd_text, resume_text):
     load_models()
+    from sklearn.metrics.pairwise import cosine_similarity
     jd_vec = model.encode(jd_text)
     res_vec = model.encode(resume_text)
     return float(cosine_similarity([jd_vec], [res_vec])[0][0]) * 100
 
 def extract_resume_details(resume_text):
-    load_models()
-    doc = nlp(resume_text)
     
     # Extract email
     email_match = re.search(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', resume_text)
